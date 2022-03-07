@@ -1,45 +1,33 @@
 body {
-  margin: 0px;
-  overflow: hidden;
+    font-family: sans-serif;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 15px;
 }
 
-rect {
-  fill: steelblue;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-hey{
-  fill: black;
+.container {
+    max-width: 720px;
+    margin: auto;
+    background: white;
+    min-height: 100vh;
+    padding: 5px 15px;
 }
-/* 
+
+svg {
+    width: 100%;
+    border: 10px inset lightgrey;
+}
+
 circle {
-  fill: red;
-  opacity: 0.3;
+    stroke: transparent;
+    transition: stroke 0.2s;
 }
 
-text {
-  font-family: sans-serif;
-}
-
-.tick text {
-  font-size: 2.7em;
-  fill: #635F5D;
-}
-
-.tick line {
-  stroke: #C0C0BB;
-}
-
-.axis-label {
-  font-size: 5em;
-  fill: #8E8883;
-}
-
-.title {
-  font-size: 3.7em;
-  fill: #635F5D;
-} */
-
-
-h1{
-  margin-left: 2rem;;
+circle:hover {
+    stroke: black;
 }

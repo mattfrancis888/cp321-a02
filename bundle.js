@@ -1,121 +1,150 @@
-(function (d3$1) {
+(function () {
     'use strict';
 
-    //Q1:
-    var myLink = document.getElementById("mylink");
-    document.getElementById("mylink2");
-    console.log("hi", myLink);
-    myLink.onclick = function () {
-        svg.select("rect").remove();
-        svg.select("rect").remove();
-        svg.select("rect").remove();
-    };
-    //const svg = select('svg');
-    var svg = d3$1.select("#chartq1");
+    // import * as d3 from "d3";
 
-    +svg.attr("width");
-    +svg.attr("height");
+    // const width = 250;
+    // const height = 250;
+    // const padding = 10; // min: 1
 
-    var render = function (data) {
-        var w = 640,
-            h = 480;
+    // const createNode = (level) => {
+    //     const numChildren = Math.ceil(Math.random() * 3) + 1;
 
-        var data = {
-            name: "root",
-            children: [
-                { name: "1", size: 100 },
-                { name: "2", size: 85 },
-                { name: "3", size: 70 },
-                { name: "4", size: 55 },
-                { name: "5", size: 40 },
-                { name: "6", size: 25 },
-                { name: "7", size: 10 } ],
-        };
+    //     if (level > 2 && (level >= 5 || numChildren <= 1)) {
+    //         return { value: Math.random() + 1 / level };
+    //     }
+    //     const children = [];
+    //     for (let i = 0; i < numChildren; i++) {
+    //         children.push(createNode(level + 1));
+    //     }
+    //     return { children };
+    // };
 
-        var canvas = d3
-            .select("#canvas")
-            .append("svg:svg")
-            .attr("width", w)
-            .attr("height", h);
+    // const data = createNode(1);
+    // console.log("hey", data);
 
-        var nodes = d3.layout
-            .pack()
-            .value(function (d) {
-                return d.size;
-            })
-            .size([w, h])
-            .nodes(data);
+    // const color = d3.scaleSequential([8, 0], d3.interpolateMagma);
+    // const pack = (data) =>
+    //     d3.pack().size([width, height]).padding(3)(
+    //         d3
+    //             .hierarchy(data)
+    //             .sum((d) => d.value)
+    //             .sort((a, b) => b.value - a.value)
+    //     );
 
-        // Get rid of root node
-        nodes.shift();
+    // const svg = d3
+    //     .select("#data")
+    //     .append("svg")
+    //     .attr("viewBox", [
+    //         -padding,
+    //         -padding,
+    //         width + padding * 2,
+    //         height + padding * 2,
+    //     ]);
+    // const root = pack(data);
 
-        canvas
-            .selectAll("circles")
-            .data(nodes)
-            .enter()
-            .append("svg:circle")
-            .attr("cx", function (d) {
-                return d.x;
-            })
-            .attr("cy", function (d) {
-                return d.y;
-            })
-            .attr("r", function (d) {
-                return d.r;
-            })
-            .attr("fill", "white")
-            .attr("stroke", "grey");
-    };
+    // const node = svg
+    //     .selectAll("g")
+    //     .data(
+    //         d3
+    //             .nest()
+    //             .key((d) => d.height)
+    //             .entries(root.descendants())
+    //     )
+    //     // .join("g")
+    //     .enter()
+    //     .append("g")
+    //     .selectAll("g")
+    //     .data((d) => d.values)
+    //     // .join("g")
+    //     .enter()
+    //     .append("g")
+    //     .attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-    // csv('data.csv').then(data => {
-    //   //parses strings into numbers with foreach
-    //   data.forEach(d => {
-    //     d.population = +d.population * 1000; //csv population is now represented in thousands
-    //   });
-    //   render(data);
+    // const circle = node
+    //     .append("circle")
+    //     .attr("r", (d) => d.r)
+    //     .attr("stroke-width", (d) => 1 / (d.depth + 1))
+    //     .attr("fill", (d) => {
+    //         console.log("star", d);
+    //         return color(1);
+    //     });
+
+    // circle.on("click", (d) => {
+    //     svg.transition()
+    //         .duration(1000)
+    //         .attr("viewBox", [
+    //             d.x - d.r - padding,
+    //             d.y - d.r - padding,
+    //             d.r * 2 + padding * 2,
+    //             d.r * 2 + padding * 2,
+    //         ]);
     // });
 
-    d3$1.csv("student.csv").then(function (data) {
-        //parses strings into numbers with foreach
-        data.forEach(function (d) {
-            d.population = +d.population; //parse from str num
+    //E2
+
+    // set the dimensions and margins of the graph
+    var width = 450;
+    var height = 450;
+
+    // append the svg object to the body of the page
+    var svg = d3
+        .select("#data")
+        .append("svg")
+        .attr("width", 450)
+        .attr("height", 450);
+
+    // create dummy data -> just one element per circle
+    var data = [
+        { name: "A" },
+        { name: "B" },
+        { name: "C" },
+        { name: "D" },
+        { name: "E" },
+        { name: "F" },
+        { name: "G" },
+        { name: "H" } ];
+
+    // Initialize the circle: all located at the center of the svg area
+    var node = svg
+        .append("g")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("r", 25)
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .style("fill", "#69b3a2")
+        .style("fill-opacity", 0.3)
+        .attr("stroke", "#69a2b2")
+        .style("stroke-width", 4);
+
+    // Features of the forces applied to the nodes:
+    var simulation = d3
+        .forceSimulation()
+        .force(
+            "center",
+            d3
+                .forceCenter()
+                .x(width / 2)
+                .y(height / 2)
+        ) // Attraction to the center of the svg area
+        .force("charge", d3.forceManyBody().strength(0.5)) // Nodes are attracted one each other of value is > 0
+        .force(
+            "collide",
+            d3.forceCollide().strength(0.01).radius(30).iterations(1)
+        ); // Force that avoids circle overlapping
+
+    // Apply these forces to the nodes and update their positions.
+    // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+    simulation.nodes(data).on("tick", function (d) {
+        node.attr("cx", function (d) {
+            return d.x;
+        }).attr("cy", function (d) {
+            return d.y;
         });
-        render(data);
     });
 
-    //Q2:
-
-    var svg2 = d3$1.select("#chartq2");
-
-    +svg2.attr("width");
-    +svg2.attr("height");
-
-    // csv('https://vizhub.com/curran/datasets/auto-mpg.csv')
-    //   .then(data => {
-    //     data.forEach(d => {
-    //       d.mpg = +d.mpg;
-    //       d.cylinders = +d.cylinders;
-    //       d.displacement = +d.displacement;
-    //       d.horsepower = +d.horsepower;
-    //       d.weight = +d.weight;
-    //       d.acceleration = +d.acceleration;
-    //       d.year = +d.year;
-    //     });
-    //     render2(data);
-    //   });
-
-    d3$1.csv("kag.csv").then(function (data) {
-        data.forEach(function (d) {
-            d.price = +d.price;
-            d["average rating"] = +d["average rating"];
-            console.log("foreach", test);
-            var test = d["course duration"].split(" ")[0];
-            console.log("foreach", test);
-            d["course duration"] = +test;
-
-            // d.duration = +d.duration;
-        });
-    });
-
-})(d3);
+})();
 //# sourceMappingURL=bundle.js.map
