@@ -1,145 +1,127 @@
-// import * as d3 from "d3";
+var svg = d3.select("svg"),
+    margin = 20,
+    diameter = +svg.attr("width"),
+    g = svg
+        .append("g")
+        .attr(
+            "transform",
+            "translate(" + diameter / 2 + "," + diameter / 2 + ")"
+        );
 
-// const width = 250;
-// const height = 250;
-// const padding = 10; // min: 1
+var color = d3
+    .scaleLinear()
+    .domain([-1, 5])
+    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    .interpolate(d3.interpolateHcl);
 
-// const createNode = (level) => {
-//     const numChildren = Math.ceil(Math.random() * 3) + 1;
+var pack = d3
+    .pack()
+    .size([diameter - margin, diameter - margin])
+    .padding(2);
 
-//     if (level > 2 && (level >= 5 || numChildren <= 1)) {
-//         return { value: Math.random() + 1 / level };
-//     }
-//     const children = [];
-//     for (let i = 0; i < numChildren; i++) {
-//         children.push(createNode(level + 1));
-//     }
-//     return { children };
-// };
+d3.json("flare.json", function (error, root) {
+    if (error) throw error;
 
-// const data = createNode(1);
-// console.log("hey", data);
+    root = d3
+        .hierarchy(root)
+        .sum(function (d) {
+            return d.size;
+        })
+        .sort(function (a, b) {
+            return b.value - a.value;
+        });
 
-// const color = d3.scaleSequential([8, 0], d3.interpolateMagma);
-// const pack = (data) =>
-//     d3.pack().size([width, height]).padding(3)(
-//         d3
-//             .hierarchy(data)
-//             .sum((d) => d.value)
-//             .sort((a, b) => b.value - a.value)
-//     );
+    var focus = root,
+        nodes = pack(root).descendants(),
+        view;
 
-// const svg = d3
-//     .select("#data")
-//     .append("svg")
-//     .attr("viewBox", [
-//         -padding,
-//         -padding,
-//         width + padding * 2,
-//         height + padding * 2,
-//     ]);
-// const root = pack(data);
+    var circle = g
+        .selectAll("circle")
+        .data(nodes)
+        .enter()
+        .append("circle")
+        .attr("class", function (d) {
+            return d.parent
+                ? d.children
+                    ? "node"
+                    : "node node--leaf"
+                : "node node--root";
+        })
+        .style("fill", function (d) {
+            return d.children ? color(d.depth) : null;
+        })
+        .on("click", function (d) {
+            if (focus !== d) zoom(d), d3.event.stopPropagation();
+        });
 
-// const node = svg
-//     .selectAll("g")
-//     .data(
-//         d3
-//             .nest()
-//             .key((d) => d.height)
-//             .entries(root.descendants())
-//     )
-//     // .join("g")
-//     .enter()
-//     .append("g")
-//     .selectAll("g")
-//     .data((d) => d.values)
-//     // .join("g")
-//     .enter()
-//     .append("g")
-//     .attr("transform", (d) => `translate(${d.x},${d.y})`);
+    var text = g
+        .selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .style("fill-opacity", function (d) {
+            return d.parent === root ? 1 : 0;
+        })
+        .style("display", function (d) {
+            return d.parent === root ? "inline" : "none";
+        })
+        .text(function (d) {
+            return d.data.name;
+        });
 
-// const circle = node
-//     .append("circle")
-//     .attr("r", (d) => d.r)
-//     .attr("stroke-width", (d) => 1 / (d.depth + 1))
-//     .attr("fill", (d) => {
-//         console.log("star", d);
-//         return color(1);
-//     });
+    var node = g.selectAll("circle,text");
 
-// circle.on("click", (d) => {
-//     svg.transition()
-//         .duration(1000)
-//         .attr("viewBox", [
-//             d.x - d.r - padding,
-//             d.y - d.r - padding,
-//             d.r * 2 + padding * 2,
-//             d.r * 2 + padding * 2,
-//         ]);
-// });
-
-//E2
-
-// set the dimensions and margins of the graph
-var width = 450;
-var height = 450;
-
-// append the svg object to the body of the page
-var svg = d3
-    .select("#data")
-    .append("svg")
-    .attr("width", 450)
-    .attr("height", 450);
-
-// create dummy data -> just one element per circle
-var data = [
-    { name: "A" },
-    { name: "B" },
-    { name: "C" },
-    { name: "D" },
-    { name: "E" },
-    { name: "F" },
-    { name: "G" },
-    { name: "H" },
-];
-
-// Initialize the circle: all located at the center of the svg area
-var node = svg
-    .append("g")
-    .selectAll("circle")
-    .data(data)
-    .enter()
-    .append("circle")
-    .attr("r", 25)
-    .attr("cx", width / 2)
-    .attr("cy", height / 2)
-    .style("fill", "#69b3a2")
-    .style("fill-opacity", 0.3)
-    .attr("stroke", "#69a2b2")
-    .style("stroke-width", 4);
-
-// Features of the forces applied to the nodes:
-var simulation = d3
-    .forceSimulation()
-    .force(
-        "center",
-        d3
-            .forceCenter()
-            .x(width / 2)
-            .y(height / 2)
-    ) // Attraction to the center of the svg area
-    .force("charge", d3.forceManyBody().strength(0.5)) // Nodes are attracted one each other of value is > 0
-    .force(
-        "collide",
-        d3.forceCollide().strength(0.01).radius(30).iterations(1)
-    ); // Force that avoids circle overlapping
-
-// Apply these forces to the nodes and update their positions.
-// Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-simulation.nodes(data).on("tick", function (d) {
-    node.attr("cx", function (d) {
-        return d.x;
-    }).attr("cy", function (d) {
-        return d.y;
+    svg.style("background", color(-1)).on("click", function () {
+        zoom(root);
     });
+
+    zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+    function zoom(d) {
+        var focus0 = focus;
+        focus = d;
+
+        var transition = d3
+            .transition()
+            .duration(d3.event.altKey ? 7500 : 750)
+            .tween("zoom", function (d) {
+                var i = d3.interpolateZoom(view, [
+                    focus.x,
+                    focus.y,
+                    focus.r * 2 + margin,
+                ]);
+                return function (t) {
+                    zoomTo(i(t));
+                };
+            });
+
+        transition
+            .selectAll("text")
+            .filter(function (d) {
+                return d.parent === focus || this.style.display === "inline";
+            })
+            .style("fill-opacity", function (d) {
+                return d.parent === focus ? 1 : 0;
+            })
+            .on("start", function (d) {
+                if (d.parent === focus) this.style.display = "inline";
+            })
+            .on("end", function (d) {
+                if (d.parent !== focus) this.style.display = "none";
+            });
+    }
+
+    function zoomTo(v) {
+        var k = diameter / v[2];
+        view = v;
+        node.attr("transform", function (d) {
+            return (
+                "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"
+            );
+        });
+        circle.attr("r", function (d) {
+            return d.r * k;
+        });
+    }
 });
