@@ -30,12 +30,16 @@
         newJSON["children"] = [];
         var temp = [].concat( root );
         var data = temp[0][Object.keys(temp[0])[0]];
+        var col = Object.keys(data[0]);
+        console.log("Columns", col);
 
         temp["children"] = [];
-        data.map(function (obj, idx) {
+        col.map(function (val, colI) {
             var newObj = {
-                name: "SUBJECT",
-                children: [
+                name: val,
+            };
+            data.map(function (obj, idx) {
+                var addMe = [
                     {
                         name: "SUBJECT 1 cluster",
                         children: [
@@ -43,11 +47,15 @@
                             { name: "CommunityStructure", size: 3812 },
                             { name: "HierarchicalCluster", size: 6714 },
                             { name: "MergeEdge", size: 743 } ],
-                    } ],
-            };
+                    } ];
 
-            newJSON["children"].push(newObj);
+                newObj["children"] = addMe;
+                console.log("result", newObj);
+
+                newJSON["children"].push(newObj);
+            });
         });
+
         console.log("newJSON - ", newJSON);
 
         root = d3

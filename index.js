@@ -27,12 +27,30 @@ d3.json("task1-copy.json", function (error, root) {
     newJSON["children"] = [];
     let temp = [...root];
     let data = temp[0][Object.keys(temp[0])[0]];
+    let col = Object.keys(data[0]);
+    console.log("Columns", col);
+    let subjects = {
+        name: "SUBJECT",
+        children: [
+            {
+                name: "SUBJECT 1 cluster",
+                children: [
+                    { name: "AgglomerativeCluster", size: 3938 },
+                    { name: "CommunityStructure", size: 3812 },
+                    { name: "HierarchicalCluster", size: 6714 },
+                    { name: "MergeEdge", size: 743 },
+                ],
+            },
+        ],
+    };
 
     temp["children"] = [];
-    data.map((obj, idx) => {
+    col.map((val, colI) => {
         let newObj = {
-            name: "SUBJECT",
-            children: [
+            name: val,
+        };
+        data.map((obj, idx) => {
+            let addMe = [
                 {
                     name: "SUBJECT 1 cluster",
                     children: [
@@ -42,11 +60,15 @@ d3.json("task1-copy.json", function (error, root) {
                         { name: "MergeEdge", size: 743 },
                     ],
                 },
-            ],
-        };
+            ];
 
-        newJSON["children"].push(newObj);
+            newObj["children"] = addMe;
+            console.log("result", newObj);
+
+            newJSON["children"].push(newObj);
+        });
     });
+
     console.log("newJSON - ", newJSON);
 
     root = d3
