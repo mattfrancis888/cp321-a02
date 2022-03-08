@@ -35,30 +35,29 @@
 
         temp["children"] = [];
         col.map(function (val, colI) {
-            var newObj = {
-                name: val,
-            };
-            var parentChildren = [];
-            newObj["children"] = parentChildren;
-            data.map(function (obj, idx) {
-                if (idx > 0) {
-                    //skip 'student col'
+            //maps through all columns
+            if (colI > 0) {
+                var newObj = {
+                    name: val,
+                };
+                var parentChildren = [];
+                newObj["children"] = parentChildren;
 
+                data.map(function (obj, idx) {
+                    //maps through all students
+                    console.log("obj is", obj, idx == 0, val);
                     var addMe = {
-                        name: "Subject cluster",
-                        children: [
-                            { name: obj.student, size: 3938 },
-                            { name: "CommunityStructure", size: 3812 },
-                            { name: "HierarchicalCluster", size: 6714 },
-                            { name: "MergeEdge", size: 743 } ],
+                        name: obj.student,
+                        size: obj[val],
                     };
 
                     parentChildren.push(addMe);
-                }
-            });
+                });
 
-            console.log("result", newObj);
-            newJSON["children"].push(newObj);
+                console.log("parentCHildren", parentChildren);
+                console.log("result", newObj);
+                newJSON["children"].push(newObj);
+            }
         });
 
         console.log("newJSON - ", newJSON);
