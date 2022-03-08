@@ -45,33 +45,70 @@ d3.json("task1-copy.json", function (error, root) {
     };
 
     temp["children"] = [];
-    col.map((val, colI) => {
-        //maps through all columns
-        if (colI > 0) {
-            let newObj = {
-                name: val,
-            };
-            let parentChildren = [];
-            newObj["children"] = parentChildren;
 
-            //in each column, if student belongs to that column....
-            let addMe; //the object for inside parentChildren
+    //OOPS:
+    // col.map((val, colI) => {
+    //     //maps through all columns
+    //     if (colI > 0) {
+    //         let newObj = {
+    //             name: val,
+    //         };
+    //         let parentChildren = [];
+    //         newObj["children"] = parentChildren;
 
-            data.map((obj, idx) => {
-                //maps through all students
-                console.log("obj is", obj, idx == 0, val);
+    //         //in each column, if student belongs to that column....
+    //         let addMe; //the object for inside parentChildren
+
+    //         data.map((obj, idx) => {
+    //             //maps through all students
+    //             console.log("obj is", obj, idx == 0, val);
+    //             let addMe = {
+    //                 name: obj.student,
+    //                 size: obj[val],
+    //             };
+
+    //             parentChildren.push(addMe);
+    //         });
+
+    //         console.log("parentCHildren", parentChildren);
+    //         console.log("result", newObj);
+    //         newJSON["children"].push(newObj);
+    //     }
+    // });
+
+    //NEW
+    data.map((val, colI) => {
+        //maps through all students
+
+        let newObj = {
+            name: val.student,
+        };
+        let parentChildren = [];
+        newObj["children"] = parentChildren;
+
+        col.map((obj, idx) => {
+            //maps through all columns
+
+            console.log("obj is", obj);
+            if (idx > 0) {
                 let addMe = {
-                    name: obj.student,
-                    size: obj[val],
+                    name: obj,
+                    size: val[obj],
                 };
-
                 parentChildren.push(addMe);
-            });
+            } else {
+                //used for labeling inside circle
+                let addMe = {
+                    name: "Student subjects",
+                    size: 0,
+                };
+                parentChildren.push(addMe);
+            }
+        });
 
-            console.log("parentCHildren", parentChildren);
-            console.log("result", newObj);
-            newJSON["children"].push(newObj);
-        }
+        console.log("parentCHildren", parentChildren);
+        console.log("result", newObj);
+        newJSON["children"].push(newObj);
     });
 
     console.log("newJSON - ", newJSON);

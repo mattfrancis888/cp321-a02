@@ -34,30 +34,70 @@
         console.log("Columns", col);
 
         temp["children"] = [];
-        col.map(function (val, colI) {
-            //maps through all columns
-            if (colI > 0) {
-                var newObj = {
-                    name: val,
-                };
-                var parentChildren = [];
-                newObj["children"] = parentChildren;
 
-                data.map(function (obj, idx) {
-                    //maps through all students
-                    console.log("obj is", obj, idx == 0, val);
+        //OOPS:
+        // col.map((val, colI) => {
+        //     //maps through all columns
+        //     if (colI > 0) {
+        //         let newObj = {
+        //             name: val,
+        //         };
+        //         let parentChildren = [];
+        //         newObj["children"] = parentChildren;
+
+        //         //in each column, if student belongs to that column....
+        //         let addMe; //the object for inside parentChildren
+
+        //         data.map((obj, idx) => {
+        //             //maps through all students
+        //             console.log("obj is", obj, idx == 0, val);
+        //             let addMe = {
+        //                 name: obj.student,
+        //                 size: obj[val],
+        //             };
+
+        //             parentChildren.push(addMe);
+        //         });
+
+        //         console.log("parentCHildren", parentChildren);
+        //         console.log("result", newObj);
+        //         newJSON["children"].push(newObj);
+        //     }
+        // });
+
+        //NEW
+        data.map(function (val, colI) {
+            //maps through all students
+
+            var newObj = {
+                name: val.student,
+            };
+            var parentChildren = [];
+            newObj["children"] = parentChildren;
+
+            col.map(function (obj, idx) {
+                //maps through all columns
+
+                console.log("obj is", obj);
+                if (idx > 0) {
                     var addMe = {
-                        name: obj.student,
-                        size: obj[val],
+                        name: obj,
+                        size: val[obj],
                     };
-
                     parentChildren.push(addMe);
-                });
+                } else {
+                    //used for labeling inside circle
+                    var addMe$1 = {
+                        name: "Student subjects",
+                        size: 0,
+                    };
+                    parentChildren.push(addMe$1);
+                }
+            });
 
-                console.log("parentCHildren", parentChildren);
-                console.log("result", newObj);
-                newJSON["children"].push(newObj);
-            }
+            console.log("parentCHildren", parentChildren);
+            console.log("result", newObj);
+            newJSON["children"].push(newObj);
         });
 
         console.log("newJSON - ", newJSON);
