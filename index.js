@@ -49,24 +49,28 @@ d3.json("task1-copy.json", function (error, root) {
         let newObj = {
             name: val,
         };
+        let parentChildren = [];
+        newObj["children"] = parentChildren;
         data.map((obj, idx) => {
-            let addMe = [
-                {
-                    name: "SUBJECT 1 cluster",
+            if (idx > 0) {
+                //skip 'student col'
+
+                let addMe = {
+                    name: "Subject cluster",
                     children: [
-                        { name: "AgglomerativeCluster", size: 3938 },
+                        { name: obj.student, size: 3938 },
                         { name: "CommunityStructure", size: 3812 },
                         { name: "HierarchicalCluster", size: 6714 },
                         { name: "MergeEdge", size: 743 },
                     ],
-                },
-            ];
+                };
 
-            newObj["children"] = addMe;
-            console.log("result", newObj);
-
-            newJSON["children"].push(newObj);
+                parentChildren.push(addMe);
+            }
         });
+
+        console.log("result", newObj);
+        newJSON["children"].push(newObj);
     });
 
     console.log("newJSON - ", newJSON);
