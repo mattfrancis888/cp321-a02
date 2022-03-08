@@ -22,13 +22,37 @@
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    d3.json("task1.json", function (error, root) {
+    d3.json("task1-copy.json", function (error, root) {
         // d3.json("flare.json", function (error, root) {
         if (error) { throw error; }
         console.log("root", root);
+        var newJSON = {};
+        newJSON["children"] = [];
+        var temp = [].concat( root );
+        var data = temp[0][Object.keys(temp[0])[0]];
+
+        temp["children"] = [];
+        data.map(function (obj, idx) {
+            var newObj = {
+                name: "SUBJECT",
+                children: [
+                    {
+                        name: "SUBJECT 1 cluster",
+                        children: [
+                            { name: "AgglomerativeCluster", size: 3938 },
+                            { name: "CommunityStructure", size: 3812 },
+                            { name: "HierarchicalCluster", size: 6714 },
+                            { name: "MergeEdge", size: 743 } ],
+                    } ],
+            };
+
+            newJSON["children"].push(newObj);
+        });
+        console.log("newJSON - ", newJSON);
 
         root = d3
-            .hierarchy(root)
+            .hierarchy(newJSON)
+            // .hierarchy(temp["children"])
             .sum(function (d) {
                 return d.size;
             })
