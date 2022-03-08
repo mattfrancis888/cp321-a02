@@ -1,3 +1,5 @@
+var myLink = document.getElementById("mylink");
+
 var svg = d3.select("svg"),
     margin = 20,
     diameter = +svg.attr("width"),
@@ -29,20 +31,6 @@ d3.json("task1-copy.json", function (error, root) {
     let data = temp[0][Object.keys(temp[0])[0]];
     let col = Object.keys(data[0]);
     console.log("Columns", col);
-    let subjects = {
-        name: "SUBJECT",
-        children: [
-            {
-                name: "SUBJECT 1 cluster",
-                children: [
-                    { name: "AgglomerativeCluster", size: 3938 },
-                    { name: "CommunityStructure", size: 3812 },
-                    { name: "HierarchicalCluster", size: 6714 },
-                    { name: "MergeEdge", size: 743 },
-                ],
-            },
-        ],
-    };
 
     temp["children"] = [];
 
@@ -110,6 +98,10 @@ d3.json("task1-copy.json", function (error, root) {
         console.log("result", newObj);
         newJSON["children"].push(newObj);
     });
+
+    myLink.onclick = function () {
+        svg.select("rect").remove();
+    };
 
     console.log("newJSON - ", newJSON);
 

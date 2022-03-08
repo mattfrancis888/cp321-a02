@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    var myLink = document.getElementById("mylink");
+
     var svg = d3.select("svg"),
         margin = 20,
         diameter = +svg.attr("width"),
@@ -99,6 +101,10 @@
             console.log("result", newObj);
             newJSON["children"].push(newObj);
         });
+
+        myLink.onclick = function () {
+            svg.select("rect").remove();
+        };
 
         console.log("newJSON - ", newJSON);
 
