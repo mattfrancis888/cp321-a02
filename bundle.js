@@ -22,8 +22,10 @@
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    d3.json("flare.json", function (error, root) {
+    d3.json("task1.json", function (error, root) {
+        // d3.json("flare.json", function (error, root) {
         if (error) { throw error; }
+        console.log("root", root);
 
         root = d3
             .hierarchy(root)
