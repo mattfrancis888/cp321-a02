@@ -247,7 +247,6 @@ var treeData = {
 };
 
 // set the dimensions and margin2s of the diagram
-// set the dimensions and margins of the diagram
 var margin2 = { top: 20, right: 90, bottom: 30, left: 90 },
     width = 660 - margin2.left - margin2.right,
     height = 500 - margin2.top - margin2.bottom;
@@ -265,10 +264,10 @@ nodes2 = treemap(nodes2);
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
-// moves the 'group' element to the top left margin
+// moves the 'group' element to the top left margin2
 var svg2 = d3
-        .select("#chartq2")
-
+        .select("body")
+        .append("svg")
         .attr("width", width + margin2.left + margin2.right)
         .attr("height", height + margin2.top + margin2.bottom),
     g2 = svg2
@@ -278,7 +277,7 @@ var svg2 = d3
             "translate(" + margin2.left + "," + margin2.top + ")"
         );
 
-// adds the links between the nodes
+// adds the links between the nodes2
 var link = g2
     .selectAll(".link")
     .data(nodes2.descendants().slice(1))
