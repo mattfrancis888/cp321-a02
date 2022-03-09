@@ -21,3 +21,8 @@
 body {
     background-color: grey;
 }
+
+text {
+    position: relative;
+    z-index: 999;
+}

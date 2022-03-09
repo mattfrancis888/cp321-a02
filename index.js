@@ -216,9 +216,7 @@ d3.json("./task2.json", viz);
 
 function viz(data) {
     console.log(data);
-    var depthScale = d3
-        .scaleOrdinal()
-        .range(["#5EAFC6", "#FE9922", "#93c464", "#75739F"]);
+    var depthScale = d3.scaleOrdinal().range(["#402D54", "#D18975", "#8FD175"]);
 
     var nestedTweets = d3
         .nest()
@@ -236,7 +234,8 @@ function viz(data) {
 
     treemapLayout(root);
 
-    d3.select("#chartq2")
+    let svg2 = d3
+        .select("#chartq2")
         .selectAll("rect")
         .data(root.descendants())
         .enter()
@@ -247,4 +246,70 @@ function viz(data) {
         .attr("height", (d) => d.y1 - d.y0)
         .style("fill", (d) => depthScale(d.depth))
         .style("stroke", "black");
+
+    // svg2 = d3
+    //     .select("#chartq2")
+    //     .attr("width", width + margin.left + margin.right)
+    //     .attr("height", height + margin.top + margin.bottom)
+    //     .append("g")
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var color2 = d3.scaleOrdinal().range(["#402D54", "#D18975", "#8FD175"]);
+
+    // svg2.selectAll("rect")
+    //     .data(root.leaves())
+    //     .enter()
+    //     .append("rect")
+    //     .attr("x", function (d) {
+    //         return d.x0;
+    //     })
+    //     .attr("y", function (d) {
+    //         return d.y0;
+    //     })
+    //     .attr("width", function (d) {
+    //         return d.x1 - d.x0;
+    //     })
+    //     .attr("height", function (d) {
+    //         return d.y1 - d.y0;
+    //     })
+    //     .style("stroke", "black")
+    //     .style("fill", function (d) {
+    //         return color(d.parent.data.name);
+    //     })
+    //     .style("opacity", function (d) {
+    //         return opacity(d.data.value);
+    //     });
+
+    //add text
+    svg2.selectAll("text")
+        .data(root.descendants())
+        .enter()
+        .append("text")
+        .attr("x", function (d) {
+            return d.x0 + 5;
+        }) // +10 to adjust position (more right)
+        .attr("y", function (d) {
+            return d.y0 + 20;
+        }) // +20 to adjust position (lower)
+        .text(function (d) {
+            return "rawr";
+        })
+        .attr("font-size", "19px")
+        .attr("fill", "white");
+    //add text
+    svg2.selectAll("vals")
+        .data(root.descendants())
+        .enter()
+        .append("text")
+        .attr("x", function (d) {
+            return d.x0 + 5;
+        }) // +10 to adjust position (more right)
+        .attr("y", function (d) {
+            return d.y0 + 35;
+        }) // +20 to adjust position (lower)
+        .text(function (d) {
+            return "yoo";
+        })
+        .attr("font-size", "11px")
+        .attr("fill", "white");
 }
