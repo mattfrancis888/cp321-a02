@@ -247,6 +247,25 @@ function viz(data) {
         .style("fill", (d) => depthScale(d.depth))
         .style("stroke", "black");
 
+    d3.select("#chartq2")
+        .selectAll("text")
+        .data(
+            root.descendants().filter(function (d) {
+                return d.depth == 1;
+            })
+        )
+        .enter()
+        .append("text")
+        .attr("x", function (d) {
+            return d.x0;
+        })
+        .attr("y", function (d) {
+            return d.y0 + 15;
+        })
+        .text((d) => d.data.key)
+        .attr("font-size", "15px")
+        .attr("fill", "black");
+
     // svg2 = d3
     //     .select("#chartq2")
     //     .attr("width", width + margin.left + margin.right)
@@ -292,7 +311,8 @@ function viz(data) {
             return d.y0 + 20;
         }) // +20 to adjust position (lower)
         .text(function (d) {
-            return "rawr";
+            console.log("my data is", d);
+            return d.data.filename;
         })
         .attr("font-size", "19px")
         .attr("fill", "white");
