@@ -223,9 +223,9 @@ function viz(data) {
         .key((d) => d.Folder)
         .entries(data.root);
 
-    var packableTweets = { id: "All Tweets", values: nestedTweets };
+    var packableData = { id: "All Data", values: nestedTweets };
 
-    var root = d3.hierarchy(packableTweets, (d) => d.values).sum((d) => d.size);
+    var root = d3.hierarchy(packableData, (d) => d.values).sum((d) => d.size);
 
     var treemapLayout = d3
         .treemap()
@@ -265,71 +265,6 @@ function viz(data) {
         .text((d) => d.data.key)
         .attr("font-size", "15px")
         .attr("fill", "black");
-
-    // svg2 = d3
-    //     .select("#chartq2")
-    //     .attr("width", width + margin.left + margin.right)
-    //     .attr("height", height + margin.top + margin.bottom)
-    //     .append("g")
-    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
     var color2 = d3.scaleOrdinal().range(["#402D54", "#D18975", "#8FD175"]);
 
-    // svg2.selectAll("rect")
-    //     .data(root.leaves())
-    //     .enter()
-    //     .append("rect")
-    //     .attr("x", function (d) {
-    //         return d.x0;
-    //     })
-    //     .attr("y", function (d) {
-    //         return d.y0;
-    //     })
-    //     .attr("width", function (d) {
-    //         return d.x1 - d.x0;
-    //     })
-    //     .attr("height", function (d) {
-    //         return d.y1 - d.y0;
-    //     })
-    //     .style("stroke", "black")
-    //     .style("fill", function (d) {
-    //         return color(d.parent.data.name);
-    //     })
-    //     .style("opacity", function (d) {
-    //         return opacity(d.data.value);
-    //     });
 
-    //add text
-    svg2.selectAll("text")
-        .data(root.descendants())
-        .enter()
-        .append("text")
-        .attr("x", function (d) {
-            return d.x0 + 5;
-        }) // +10 to adjust position (more right)
-        .attr("y", function (d) {
-            return d.y0 + 20;
-        }) // +20 to adjust position (lower)
-        .text(function (d) {
-            console.log("my data is", d);
-            return d.data.filename;
-        })
-        .attr("font-size", "19px")
-        .attr("fill", "white");
-    //add text
-    svg2.selectAll("vals")
-        .data(root.descendants())
-        .enter()
-        .append("text")
-        .attr("x", function (d) {
-            return d.x0 + 5;
-        }) // +10 to adjust position (more right)
-        .attr("y", function (d) {
-            return d.y0 + 35;
-        }) // +20 to adjust position (lower)
-        .text(function (d) {
-            return "yoo";
-        })
-        .attr("font-size", "11px")
-        .attr("fill", "white");
-}

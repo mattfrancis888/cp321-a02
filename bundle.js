@@ -235,7 +235,7 @@
 
         treemapLayout(root);
 
-        var svg2 = d3
+        d3
             .select("#chartq2")
             .selectAll("rect")
             .data(root.descendants())
@@ -299,40 +299,6 @@
         //     .style("opacity", function (d) {
         //         return opacity(d.data.value);
         //     });
-
-        //add text
-        svg2.selectAll("text")
-            .data(root.descendants())
-            .enter()
-            .append("text")
-            .attr("x", function (d) {
-                return d.x0 + 5;
-            }) // +10 to adjust position (more right)
-            .attr("y", function (d) {
-                return d.y0 + 20;
-            }) // +20 to adjust position (lower)
-            .text(function (d) {
-                console.log("my data is", d);
-                return d.data.filename;
-            })
-            .attr("font-size", "19px")
-            .attr("fill", "white");
-        //add text
-        svg2.selectAll("vals")
-            .data(root.descendants())
-            .enter()
-            .append("text")
-            .attr("x", function (d) {
-                return d.x0 + 5;
-            }) // +10 to adjust position (more right)
-            .attr("y", function (d) {
-                return d.y0 + 35;
-            }) // +20 to adjust position (lower)
-            .text(function (d) {
-                return "yoo";
-            })
-            .attr("font-size", "11px")
-            .attr("fill", "white");
     }
 
 })();
