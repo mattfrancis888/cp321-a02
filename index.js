@@ -12,8 +12,11 @@ var svg = d3.select("#chartq1"),
 
 var color = d3
     .scaleLinear()
+    //.domain([-1, 5])
     .domain([-1, 5])
-    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    // .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    .range(["hsl(152,80%,80%)", "red"])
+    // .range(["white", "green"])
     .interpolate(d3.interpolateHcl);
 
 var pack = d3
@@ -131,9 +134,18 @@ d3.json("task1.json", function (error, root) {
                     : "node node--leaf"
                 : "node node--root";
         })
+        // .style("fill", function (d) {
+        //     return d.children ? color(d.depth) : null;
+        // })
         .style("fill", function (d) {
-            return d.children ? color(d.depth) : null;
+            console.log("d is", d);
+            return d.children ? color(d.depth) : color(d.data.size);
         })
+
+        // .style("fill", function (d) {
+        //     console.log("d is", d);
+        //     return color(d.data.size);
+        // })
         .on("click", function (d) {
             if (focus !== d) zoom(d), d3.event.stopPropagation();
         });
@@ -185,6 +197,7 @@ d3.json("task1.json", function (error, root) {
             .filter(function (d) {
                 return d.parent === focus || this.style.display === "inline";
             })
+
             .style("fill-opacity", function (d) {
                 return d.parent === focus ? 1 : 0;
             })
@@ -204,6 +217,7 @@ d3.json("task1.json", function (error, root) {
                 "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"
             );
         });
+
         circle.attr("r", function (d) {
             return d.r * k;
         });
@@ -254,6 +268,7 @@ function viz(data) {
                 return d.depth == 1;
             })
         )
+
         .enter()
         .append("text")
         .attr("x", function (d) {
@@ -265,6 +280,5 @@ function viz(data) {
         .text((d) => d.data.key)
         .attr("font-size", "15px")
         .attr("fill", "black");
-    var color2 = d3.scaleOrdinal().range(["#402D54", "#D18975", "#8FD175"]);
-
-
+}
+var color2 = d3.scaleOrdinal().range(["#402D54", "#D18975", "#8FD175"]);
