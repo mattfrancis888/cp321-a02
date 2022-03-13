@@ -234,7 +234,7 @@ function viz(data) {
 
     var nestedTweets = d3
         .nest()
-        .key((d) => d.Folder)
+        .key((d) => d.Folder + "( " + d.filename.split(".").pop() + " )")
         .entries(data.root);
 
     var packableData = { id: "All Data", values: nestedTweets };

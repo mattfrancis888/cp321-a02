@@ -43,3 +43,23 @@
     stroke: #ccc;
     stroke-width: 2px;
 }
+
+ul {
+    display: flex;
+}
+
+ul li {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+ul img {
+    height: 100%;
+    width: 5rem;
+    object-fit: cover;
+}
+
+ul h3 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}

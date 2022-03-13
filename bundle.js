@@ -235,7 +235,7 @@
 
         var nestedTweets = d3
             .nest()
-            .key(function (d) { return d.Folder; })
+            .key(function (d) { return d.Folder + "( " + d.filename.split(".").pop() + " )"; })
             .entries(data.root);
 
         var packableData = { id: "All Data", values: nestedTweets };
