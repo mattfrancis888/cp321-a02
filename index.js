@@ -194,7 +194,7 @@ d3.json("task1.json", function (error, root) {
     }
 });
 
-//q2 (taken from textbook)
+//q2 (taken from textbook) Treemap
 
 d3.json("./task2.json", viz);
 
@@ -214,7 +214,9 @@ function viz(data) {
     // })
     var packableData = { id: "All Data", values: nestedTweets };
 
-    var root = d3.hierarchy(packableData, (d) => d.values).sum((d) => d.size);
+    var root = d3
+        .hierarchy(packableData, (d) => d.values)
+        .sum((d) => d.size - 300);
     console.log("hiearchy root", root); //creates hiearchy based on data, need sum because it will
     // returns the desired value for each individual node
 
@@ -242,10 +244,10 @@ function viz(data) {
         .selectAll("text")
         .data(
             root.descendants().filter(function (d) {
-                return d.depth == 1;
+                console.log("text", d);
+                return d.depth == 1; //gets parent
             })
         )
-
         .enter()
         .append("text")
         .attr("x", function (d) {
