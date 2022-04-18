@@ -37,36 +37,6 @@ d3.json("task1.json", function (error, root) {
 
     temp["children"] = [];
 
-    //OOPS:
-    // col.map((val, colI) => {
-    //     //maps through all columns
-    //     if (colI > 0) {
-    //         let newObj = {
-    //             name: val,
-    //         };
-    //         let parentChildren = [];
-    //         newObj["children"] = parentChildren;
-
-    //         //in each column, if student belongs to that column....
-    //         let addMe; //the object for inside parentChildren
-
-    //         data.map((obj, idx) => {
-    //             //maps through all students
-    //             console.log("obj is", obj, idx == 0, val);
-    //             let addMe = {
-    //                 name: obj.student,
-    //                 size: obj[val],
-    //             };
-
-    //             parentChildren.push(addMe);
-    //         });
-
-    //         console.log("parentCHildren", parentChildren);
-    //         console.log("result", newObj);
-    //         newJSON["children"].push(newObj);
-    //     }
-    // });
-
     //NEW
     data.map((val, colI) => {
         //maps through all students
@@ -236,11 +206,19 @@ function viz(data) {
         .nest()
         .key((d) => d.Folder + "( " + d.filename.split(".").pop() + " )")
         .entries(data.root);
-
+    //group by a certain property defined in key
+    //like:
+    //d3.nest()
+    // .key(function (d) {
+    //     return d.manufactured;
+    // })
     var packableData = { id: "All Data", values: nestedTweets };
 
     var root = d3.hierarchy(packableData, (d) => d.values).sum((d) => d.size);
+    console.log("hiearchy root", root); //creates hiearchy based on data, need sum because it will
+    // returns the desired value for each individual node
 
+    //set up a layout for the treemap
     var treemapLayout = d3
         .treemap()
         .size([500, 500])
@@ -248,8 +226,7 @@ function viz(data) {
 
     treemapLayout(root);
 
-    let svg2 = d3
-        .select("#chartq2")
+    d3.select("#chartq2")
         .selectAll("rect")
         .data(root.descendants())
         .enter()
